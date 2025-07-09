@@ -104,6 +104,23 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
+In order to download QM9 dataset for RDKit baseline:
+
+```bash
+
+wget https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/gdb9.tar.gz
+wget https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/qm9.csv
+```
+
+Geom dataset download:
+
+```bash
+
+wget https://zenodo.org/records/15353365/files/geom_train.pt -O datasets/geom_train.pt
+
+wget https://zenodo.org/records/15353365/files/geom_train.pt -O datasets/geom_test.pt
+```
+
 ## Citation
 
 If you use this project in your research or build upon it, please cite the relevant foundational works:
