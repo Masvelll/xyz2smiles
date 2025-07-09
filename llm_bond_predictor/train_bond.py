@@ -4,7 +4,7 @@ from pytorch_lightning import Trainer
 import sys 
 sys.path.insert(1, '/home/user12/spavlenko')
 import emb_dataset                     as ds
-from llm_bond     import BondPredictorLLM, BondPredictorGRPO 
+from llm_bond     import BondPredictorLLM, BondPredictorRPO 
 from pytorch_lightning.loggers import WandbLogger            
 import wandb 
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -37,7 +37,7 @@ D_ATOM = probe["atom_embeddings"].shape[1]
 D_EDGE = probe["pair_embeddings"].shape[2]
 
 # 3) Модель
-model = BondPredictorGRPO(
+model = BondPredictorRPO(
     llm_id   = LLM_ID,
     d_atom   = D_ATOM,
     d_edge   = D_EDGE,
