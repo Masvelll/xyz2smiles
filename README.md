@@ -55,7 +55,7 @@ python scripts/xgboost.py
 ```
 
 ### 🔹 LLM-based
-- **MolT5**: Large language model that processes concatenated [a_i, a_j, e_ij] vectors.
+- **MolT5**: Large language model that processes concatenated pair embeddings vectors and encoded prompt.
 - **MolT5 + GRPO**: Finetuned version using gradient-based rewiring for enhanced accuracy.
 
 Located under `llm_bond_predictor/`.
