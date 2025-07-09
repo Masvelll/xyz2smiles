@@ -25,7 +25,14 @@ xyz2smiles/
 
 ### 🔹 Baselines
 
-- **RDKit**: 
+- **RDKit (heuristic)**
+
+    - Traditional rule-based method for bond perception based on interatomic distances and valence checks.
+
+    - We used RDKit’s rdDetermineBonds() as a baseline to extract bond graphs from 3D coordinates.
+
+    - Evaluated primarily on the QM9 dataset, where it performs well due to regular bonding patterns.
+
 
 - **Yuel-Bond**: Graph Neural Network baseline for bond prediction.
   - Original repo: [https://bitbucket.org/dokhlab/yuel_bond](https://bitbucket.org/dokhlab/yuel_bond)
