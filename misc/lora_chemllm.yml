@@ -1,0 +1,55 @@
+# ─── базовая модель ───────────────────────────────────────────────
+base_model: "AI4Chem/ChemLLM-7B-Chat-1_5-DPO"
+tokenizer_path: "AI4Chem/ChemLLM-7B-Chat-1_5-DPO"
+trust_remote_code: true
+
+# ─── датасет ───────────────────────────────────────────────────────
+datasets:
+  - path: /home/user12/prompts
+    type: chat_template
+    train_split: train
+    eval_split: valid
+    conversation_field: messages
+    chat_template: chatml
+
+dataset_prepared_path: ./data_cache
+
+# ─── LoRA ──────────────────────────────────────────────────────────
+adapter: lora          # ← обязательно
+
+lora_r: 16
+lora_alpha: 16
+lora_dropout: 0.05
+
+lora_target_linear: true
+
+# ─── обучение ─────────────────────────────────────────────────────
+sequence_len: 2048
+model_max_length: 2048
+micro_batch_size: 2
+gradient_accumulation_steps: 8
+epochs: 0.3
+learning_rate: 2e-4
+lr_scheduler: cosine
+warmup_steps: 100
+train_on_inputs: true
+
+# ─── память ────────────────────────────────────────────────────────
+gradient_checkpointing: true
+
+# ─── вывод / сохранение ───────────────────────────────────────────
+output_dir: runs/lora_bond_chemllm
+save_lora: true
+save_only_model: false
+save_safetensors: false
+save_strategy: steps
+save_steps: 100
+evaluation_strategy: steps
+eval_steps: 10
+
+report_to: ["wandb"]
+logging_steps: 10
+wandb_project: smiles_chemllm_bond
+
+debug: true
+
