@@ -8,7 +8,6 @@ This repository explores multiple approaches — from classical machine learning
 
 ## 🗂️ Repository Structure
 
-xyz2smiles/
 
 ├── baselines/ # Reference implementations (e.g. Yuel-Bond) \
 ├── data/ # Dataset storage and preprocessing tools \
@@ -83,3 +82,14 @@ You can train or evaluate models via:
 python llm_bond_predictor/train_bond.py 
 
 python llm_bond_predictor/run_test.py
+```
+
+
+## Installation
+
+We recommend using a fresh Python 3.10+ environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
