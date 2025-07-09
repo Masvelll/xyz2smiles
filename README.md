@@ -68,7 +68,7 @@ Bond type classification was evaluated on the [GEOM dataset](https://github.com/
 - **Per-bond metrics** (F1, precision, recall)
 - **Exact match** for whole-molecule reconstruction
 
-See our `notebooks/` for visualization and summary tables.
+See notebook/ for more info
 
 ---
 
