@@ -14,7 +14,6 @@ This repository explores multiple approaches — from classical machine learning
 ├── llm_bond_predictor/ # Our core pipeline using MolT5/GRPO + Uni-Mol embeddings \
 ├── notebooks/ # Interactive demos and model evaluation (Jupyter) \
 ├── scripts  # Training/inference utilities for all models \
-├── README.md # This file
 
 
 ---
