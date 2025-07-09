@@ -76,7 +76,7 @@ Bond type classification was evaluated on the [GEOM dataset](https://github.com/
 | MolT5+GRPO    | 0.998          | 0.978       |
 
 
-See notebook/ for more info
+See notebooks/ for more info
 
 
 
