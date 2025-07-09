@@ -39,7 +39,15 @@ xyz2smiles/
 ### 🔹 Classical
 - **Random Forest** classifier trained on pairwise Uni-Mol embeddings.
 
+```bash
+python scripts/rf.py
+```
+
 - **XGBoost** on pairwise Uni-Mol embeddings.
+
+```bash
+python scripts/xgboost.py
+```
 
 ### 🔹 LLM-based
 - **MolT5**: Large language model that processes concatenated [a_i, a_j, e_ij] vectors.
