@@ -139,3 +139,6 @@ If you cite this project directly, use:
   note         = {AIRI Summer School Project},
   url          = {https://github.com/your_repo_url}
 }
+
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
