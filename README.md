@@ -38,7 +38,8 @@ xyz2smiles/
 
 ### 🔹 Classical
 - **Random Forest** classifier trained on pairwise Uni-Mol embeddings.
-- Fast and lightweight but struggles with global molecular consistency.
+
+- **XGBoost** on pairwise Uni-Mol embeddings.
 
 ### 🔹 LLM-based
 - **MolT5**: Large language model that processes concatenated [a_i, a_j, e_ij] vectors.
