@@ -124,7 +124,7 @@ wget https://zenodo.org/records/15353365/files/geom_train.pt -O datasets/geom_te
 ## Citation
 
 If you use this project in your research or build upon it, please cite the relevant foundational works:
-
+```
 @article{zhou2023unimol,
   title={Uni-Mol: A Universal 3D Molecular Representation Learning Framework},
   author={Zhou, Kun and Gong, Ming and Shen, Yang and others},
@@ -145,10 +145,11 @@ If you use this project in your research or build upon it, please cite the relev
   journal={To appear, NeurIPS 2025},
   year={2025}
 }
-
+```
 
 If you cite this project directly, use:
 
+```
 @misc{xyz2smiles2025,
   author       = {Pavel Maslov, Stepan Pavlenko, Ivan Burov},
   title        = {xyz2smiles: End-to-end recovery of SMILES strings from 3D atomic coordinates},
@@ -156,6 +157,7 @@ If you cite this project directly, use:
   note         = {AIRI Summer School Project},
   url          = {https://github.com/your_repo_url}
 }
+```
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
