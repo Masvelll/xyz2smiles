@@ -70,7 +70,7 @@ Bond type classification was evaluated on the [GEOM dataset](https://github.com/
 
 | Model         | Total Accuracy | Exact Match |
 |---------------|----------------|-------------|
-| Yuel-Bond     | 0.978          | 0.969       |
+| Yuel-Bond     | 0.978          | 0.934       |
 | Random Forest | 0.983          |  -       |
 | MolT5         | 0.999          | 0.978       |
 | MolT5+GRPO    | 0.998          | 0.978       |
