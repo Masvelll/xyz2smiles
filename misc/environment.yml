@@ -1,0 +1,39 @@
+name: xyz_smiles
+channels:
+  - pytorch
+  - nvidia              # CUDA 12.1 run-time для готовых колёс
+  - conda-forge
+  - defaults
+dependencies:
+  # ───────── ядро DL / CUDA 12.1 ───────────────────────────────────────────
+  - python              =3.10
+  - pytorch             =2.3.0
+  - torchvision         =0.18.0
+  - pytorch-cuda        =12.1          # подтянет cudatoolkit 12.1 + cuDNN
+  # ───────── LLM-стек ─────────────────────────────────────────────────────
+  - pip
+  - pip:
+      - transformers==4.42.0           # совместим с torch 2.3
+      - accelerate>=0.28
+      - bitsandbytes                   # 8-бит веса
+      - sentencepiece                  # токенизаторы T5/MolT5
+      - tiktoken~=0.9                  # если понадобятся GPT-BPE
+      - peft>=0.10                     # LoRA / QLoRA
+      - datasets>=2.19                 # чтение JSONL больших датасетов
+  # ───────── Uni-Mol / химия ──────────────────────────────────────────────
+  - unimol==0.1.1                      # pip-релиз (загружает C ++ ext)
+  - rdkit                              # мол-операции, bond-orders
+  - spacy                              # нужен MolT5-baseline
+  - spacy-model-en_core_web_sm         # «python -m spacy download …»
+  # ───────── ML / SciPy / ускорители ──────────────────────────────────────
+  - numpy
+  - scipy                              # cKDTree
+  - scikit-learn                       # MiniBatchKMeans
+  - faiss-gpu                          # быстрый k-Means / NN (CUDA)
+  - networkx==3.2.1                    # < 3.3 — избежит бага Dataclass
+  - tqdm
+  # ───────── вспомогательное ─────────────────────────────────────────────
+  - ipykernel  # если работаете в Jupyter
+  - jinja2
+  - pandas                             # анализ логов
+
