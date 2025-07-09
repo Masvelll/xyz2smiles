@@ -68,7 +68,17 @@ Bond type classification was evaluated on the [GEOM dataset](https://github.com/
 - **Per-bond metrics** (F1, precision, recall)
 - **Exact match** for whole-molecule reconstruction
 
+| Model         | Total Accuracy | Exact Match |
+|---------------|----------------|-------------|
+| Yuel-Bond     | 0.978          | 0.969       |
+| Random Forest | 0.983          |  -       |
+| MolT5         | 0.999          | 0.978       |
+| MolT5+GRPO    | 0.998          | 0.978       |
+
+
 See notebook/ for more info
+
+
 
 ---
 
@@ -92,3 +102,40 @@ We recommend using a fresh Python 3.10+ environment:
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+```
+
+## Citation
+
+If you use this project in your research or build upon it, please cite the relevant foundational works:
+
+@article{zhou2023unimol,
+  title={Uni-Mol: A Universal 3D Molecular Representation Learning Framework},
+  author={Zhou, Kun and Gong, Ming and Shen, Yang and others},
+  journal={arXiv preprint arXiv:2210.01776},
+  year={2023}
+}
+
+@article{raffel2020exploring,
+  title={Exploring the limits of transfer learning with a unified text-to-text transformer},
+  author={Raffel, Colin and others},
+  journal={JMLR},
+  year={2020}
+}
+
+@article{wang2025multimodal,
+  title={Multimodal Bond Perception for 3D Molecular Graph Generation},
+  author={Wang, et al.},
+  journal={To appear, NeurIPS 2025},
+  year={2025}
+}
+
+
+If you cite this project directly, use:
+
+@misc{xyz2smiles2025,
+  author       = {Pavel Maslov, Stepan Pavlenko, Ivan Burov},
+  title        = {xyz2smiles: End-to-end recovery of SMILES strings from 3D atomic coordinates},
+  year         = 2025,
+  note         = {AIRI Summer School Project},
+  url          = {https://github.com/your_repo_url}
+}
