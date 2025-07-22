@@ -22,6 +22,7 @@ class BondPredictorLLM(pl.LightningModule):
         num_classes: int = 4,
         lr: float = 2e-5,
         concat_order: str = "graph_first",
+        finetune_llm = "all",    
     ):
         super().__init__()
         self.save_hyperparameters()
@@ -29,6 +30,17 @@ class BondPredictorLLM(pl.LightningModule):
         self.tok = AutoTokenizer.from_pretrained(llm_id)
         # self.llm = AutoModel.from_pretrained(llm_id)
         self.llm = T5EncoderModel.from_pretrained(llm_id)
+        
+        # Заморозка всех, кроме последних слоёв
+        self._freeze_llm()
+        if finetune_llm in ("all", -1):
+            # разморозить всю модель
+            for p in self.llm.parameters():
+                p.requires_grad = True
+        elif isinstance(finetune_llm, int) and finetune_llm > 0:
+            self._unfreeze_last_layers(finetune_llm)
+        
+        
         self.lr = lr
         self.concat_order = concat_order
 
@@ -42,6 +54,27 @@ class BondPredictorLLM(pl.LightningModule):
         # Классификатор
         self.classifier = nn.Linear(d_llm, num_classes)
         self.loss_fn = nn.CrossEntropyLoss()
+
+    def _freeze_llm(self):
+        """Запрещаем градиенты для всей LLM."""
+        for p in self.llm.parameters():
+            p.requires_grad = False
+        self.llm.eval() 
+
+    def _unfreeze_last_layers(self, n: int):
+        """
+        Размораживает n последних энкодер-блоков.
+        + финальный LayerNorm — это часто помогает.
+        """
+        if n <= 0:
+            return
+        encoder_blocks = self.llm.encoder.block
+        for block in encoder_blocks[-n:]:
+            for p in block.parameters():
+                p.requires_grad = True
+        # финальный layer-norm (по желанию)
+        for p in self.llm.encoder.final_layer_norm.parameters():
+            p.requires_grad = True
 
     def forward(self, batch):
         
@@ -123,7 +156,8 @@ class BondPredictorLLM(pl.LightningModule):
         self.log("val/f1", f1, prog_bar=True)
 
     def configure_optimizers(self):
-        return torch.optim.AdamW(self.parameters(), lr=self.lr)
+        trainable = filter(lambda p: p.requires_grad, self.parameters())
+        return torch.optim.AdamW(trainable, lr=self.lr)
     
 
 class BondPredictorGRPO(BondPredictorLLM):

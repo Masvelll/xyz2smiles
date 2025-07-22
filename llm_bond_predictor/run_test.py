@@ -1,20 +1,34 @@
 import torch
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, random_split
 import sys
 import json
-sys.path.insert(1, '/home/user12/spavlenko')
 import emb_dataset as ds     # ваш модуль
 from llm_bond import BondPredictorLLM
 from llm_bond import BondPredictorGRPO
 from sklearn.metrics import classification_report, accuracy_score, f1_score, recall_score, precision_score
 from tqdm import tqdm
 
-LMDB_DIR   = "/home/user12/burov/unimol_embeddings_project/molecule_embeddings_test.lmdb"           # где лежат эмбеддинги
-JSONL_PATH = "/home/user12/prompts2/prompts_test.jsonl"           # и prompts.jsonl
+LMDB_DIR   = "../data/molecule_embeddings.lmdb"           # где лежат эмбеддинги
+JSONL_PATH = "../data/prompts/prompts.jsonl"           # и prompts.jsonl
 BATCH_SIZE = 16
 
-dataset = ds.PairedLMDBJsonlDataset(LMDB_DIR, JSONL_PATH)
-loader  = DataLoader(dataset,
+
+full_ds = ds.PairedLMDBJsonlDataset(LMDB_DIR, JSONL_PATH)
+
+seed = 42                                  # любое выбранное вами фиксированное число
+g = torch.Generator().manual_seed(seed)     # генератор с постоянным состоянием
+
+train_size = int(0.9 * len(full_ds))
+val_size   = len(full_ds) - train_size
+
+train_ds, val_ds = random_split(
+    full_ds,
+    [train_size, val_size],
+    generator=g,                            # <-- фиксируем random_state
+)
+
+
+loader  = DataLoader(val_ds,
                      batch_size=BATCH_SIZE,
                      shuffle=False,
                      collate_fn=ds.collate_graph_batch,
@@ -22,9 +36,10 @@ loader  = DataLoader(dataset,
 
 
 # CKPT_PATH = "lightning_logs/version_0/checkpoints/epoch=2-step=294618.ckpt"
-CKPT_PATH = "/home/user12/maslov/ckpts/best-val/acc=0.9981.ckpt"
+# CKPT_PATH = "/home/user12/maslov/ckpts/best-val/acc=0.9981.ckpt"
+CKPT_PATH = "ckpts/best-val/acc=0.9988.ckpt"
 print('Loading model...')
-model = BondPredictorGRPO.load_from_checkpoint(CKPT_PATH).to("cuda").eval()
+model = BondPredictorLLM.load_from_checkpoint(CKPT_PATH).to("cuda").eval()
 model.eval()
 y_true, y_pred = [], []
 print('Making predictions...')
