@@ -7,6 +7,8 @@ from llm_bond     import BondPredictorLLM
 from pytorch_lightning.loggers import WandbLogger            
 import wandb 
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.loggers import TensorBoardLogger
+
 
 
 # ---- Параметры ----------------------------------------------------
@@ -68,6 +70,14 @@ wandb_logger = WandbLogger(
     resume      = "must",  
     id = None,
 )
+
+# 4.2) Tensorboardlogger
+tb_logger = TensorBoardLogger(
+    save_dir="logs",     # каталог, куда сохраняются логи
+    name="molt5-run-full-finetune",  # имя подкаталога
+    default_hp_metric=False
+)
+
 # 5) чек-пойнт коллбэк (лёгкий файл только с весами)
 ckpt_cb = ModelCheckpoint(
     dirpath      = "ckpts",
@@ -90,7 +100,7 @@ trainer = Trainer(
     max_epochs=EPOCHS,
     gradient_clip_val=1.0,
     log_every_n_steps=10,
-    logger=wandb_logger
+    logger=tb_logger
 )
 
 trainer.fit(model, loader_train, loader_val)
