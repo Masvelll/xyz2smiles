@@ -69,23 +69,48 @@ class BondPredictorLLM(pl.LightningModule):
         token_input = torch.cat([A_i, A_j, E_ij], dim=-1)
         input_tokens = self.token_proj(token_input)  # [K, d_llm]
 
-        # обрабатываем prompt через токенизатор
-        tokenized = self.tok(prompts[0], return_tensors="pt", max_length=1024).to(self.device)
-        prompt_embeds = self.llm.get_input_embeddings()(tokenized.input_ids).squeeze(0)  # [T, d_llm]
+        # Process each prompt separately and collect embeddings for each pair
+        logits_dict = {}
+        
+        # Group pairs by molecule
+        pairs_by_mol = {}
+        for k, (mol_idx, i_idx, j_idx) in enumerate(pair_idx):
+            mol_idx = mol_idx.item()
+            if mol_idx not in pairs_by_mol:
+                pairs_by_mol[mol_idx] = []
+            pairs_by_mol[mol_idx].append(k)
+        
+        # Process each molecule separately
+        for mol_idx, pair_indices_for_mol in pairs_by_mol.items():
+            # Get tokens for this molecule
+            mol_tokens = input_tokens[pair_indices_for_mol]  # [num_pairs_in_mol, d_llm]
+            
+            # Tokenize the prompt for this molecule
+            tokenized = self.tok(prompts[mol_idx], return_tensors="pt", max_length=1024).to(self.device)
+            prompt_embeds = self.llm.get_input_embeddings()(tokenized.input_ids).squeeze(0)  # [T, d_llm]
 
-        # склеиваем в последовательность
-        if self.concat_order == "graph_first":
-            full_input = torch.cat([input_tokens, prompt_embeds], dim=0)
-            offset = 0
-        else:
-            full_input = torch.cat([prompt_embeds, input_tokens], dim=0)
-            offset = prompt_embeds.shape[0]
+            # Concatenate tokens and prompt
+            if self.concat_order == "graph_first":
+                full_input = torch.cat([mol_tokens, prompt_embeds], dim=0)
+                offset = 0
+            else:
+                full_input = torch.cat([prompt_embeds, mol_tokens], dim=0)
+                offset = prompt_embeds.shape[0]
 
-        out = self.llm(inputs_embeds=full_input.unsqueeze(0), return_dict=True)
-        hidden = out.last_hidden_state.squeeze(0)  # [T+K, d_llm]
+            # Process through LLM
+            out = self.llm(inputs_embeds=full_input.unsqueeze(0), return_dict=True)
+            hidden = out.last_hidden_state.squeeze(0)  # [T+num_pairs, d_llm]
 
-        graph_out = hidden[offset:offset + K]      # [K, d_llm]
-        logits = self.classifier(graph_out)        # [K, num_classes]
+            # Extract graph outputs
+            graph_out = hidden[offset:offset + len(pair_indices_for_mol)]  # [num_pairs, d_llm]
+            mol_logits = self.classifier(graph_out)  # [num_pairs, num_classes]
+            
+            # Store logits with their original indices
+            for i, original_idx in enumerate(pair_indices_for_mol):
+                logits_dict[original_idx] = mol_logits[i]
+        
+        # Reconstruct logits in original order
+        logits = torch.stack([logits_dict[k] for k in range(K)], dim=0)  # [K, num_classes]
         return logits
 
     def training_step(self, batch, batch_idx):

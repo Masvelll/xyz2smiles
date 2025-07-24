@@ -85,9 +85,13 @@ def collate_graph_batch(batch: List[dict]):
 
     N_max = max([item["atom_embeddings"].shape[0] for item in batch])
 
-    device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
     atom_tensor = torch.zeros((batch_size, N_max, D_atom), dtype=torch.float32).to(device)
     pair_tensor = torch.zeros((batch_size, N_max, N_max, D_edge), dtype=torch.float32).to(device)
+    
+    # Add attention masks for padded positions
+    atom_mask = torch.zeros((batch_size, N_max), dtype=torch.bool).to(device)
+    pair_mask = torch.zeros((batch_size, N_max, N_max), dtype=torch.bool).to(device)
 
     labels = []
     pair_indices = []
@@ -96,8 +100,12 @@ def collate_graph_batch(batch: List[dict]):
     for b, item in enumerate(batch):
         N = item["atom_embeddings"].shape[0]
         
-        atom_tensor[b, :N] = item["atom_embeddings"]
-        pair_tensor[b, :N, :N] = item["pair_embeddings"]
+        atom_tensor[b, :N] = torch.as_tensor(item["atom_embeddings"], dtype=torch.float32).to(device)
+        pair_tensor[b, :N, :N] = torch.as_tensor(item["pair_embeddings"], dtype=torch.float32).to(device)
+        
+        # Mark valid positions (True = valid, False = padded)
+        atom_mask[b, :N] = True
+        pair_mask[b, :N, :N] = True
 
         for i, j, lbl in item["labels"]:
             pair_indices.append((b, i, j))
@@ -108,8 +116,10 @@ def collate_graph_batch(batch: List[dict]):
     ret_dict = {
         "atom_embeddings": atom_tensor,
         "pair_embeddings": pair_tensor,
-        "pair_indices": torch.tensor(pair_indices, dtype=torch.long),
-        "labels": torch.tensor(labels, dtype=torch.long),
+        "atom_mask": atom_mask,
+        "pair_mask": pair_mask,
+        "pair_indices": torch.tensor(pair_indices, dtype=torch.long).to(device),
+        "labels": torch.tensor(labels, dtype=torch.long).to(device),
         "prompts": prompts
     }
     # for key, item in ret_dict.items():

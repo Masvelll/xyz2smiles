@@ -9,9 +9,15 @@ from llm_bond import BondPredictorGRPO
 from sklearn.metrics import classification_report, accuracy_score, f1_score, recall_score, precision_score
 from tqdm import tqdm
 
+<<<<<<< Updated upstream
 LMDB_DIR   = "/home/user12/burov/unimol_embeddings_project/molecule_embeddings_test.lmdb"           # где лежат эмбеддинги
 JSONL_PATH = "/home/user12/prompts2/prompts_test.jsonl"           # и prompts.jsonl
 BATCH_SIZE = 16
+=======
+LMDB_DIR   = "../data/molecule_embeddings.lmdb"           # где лежат эмбеддинги
+JSONL_PATH = "../data/prompts/prompts.jsonl"           # и prompts.jsonl
+BATCH_SIZE = 8
+>>>>>>> Stashed changes
 
 dataset = ds.PairedLMDBJsonlDataset(LMDB_DIR, JSONL_PATH)
 loader  = DataLoader(dataset,
@@ -22,7 +28,12 @@ loader  = DataLoader(dataset,
 
 
 # CKPT_PATH = "lightning_logs/version_0/checkpoints/epoch=2-step=294618.ckpt"
+<<<<<<< Updated upstream
 CKPT_PATH = "/home/user12/maslov/ckpts/best-val/acc=0.9981.ckpt"
+=======
+# CKPT_PATH = "/home/user12/maslov/ckpts/best-val/acc=0.9981.ckpt"
+CKPT_PATH = "ckpts/best-val/acc=0.9990.ckpt"
+>>>>>>> Stashed changes
 print('Loading model...')
 model = BondPredictorGRPO.load_from_checkpoint(CKPT_PATH).to("cuda").eval()
 model.eval()
