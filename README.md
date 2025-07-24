@@ -157,9 +157,9 @@ If you cite this project directly, use:
   note         = {AIRI Summer School Project},
   url          = {https://github.com/Masvelll/xyz2smiles}
 }
+```
 
 **Project Authors:** [Pavel Maslov](https://github.com/Masvelll) | [Stepan Pavlenko](https://github.com/Stepan-Pavlenko) | [Ivan Burov](https://github.com/lokofanko)
-```
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
