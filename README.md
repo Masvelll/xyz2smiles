@@ -159,7 +159,7 @@ If you cite this project directly, use:
 }
 ```
 
-**Project Authors:** [Pavel Maslov](https://github.com/Masvelll) | [Stepan Pavlenko](https://github.com/Stepan-Pavlenko) | [Ivan Burov](https://github.com/lokofanko)
+**Project Authors:** [Pavel Maslov](https://github.com/Masvelll) | [Stepan Pavlenko](https://github.com/PavlenkoSS) | [Ivan Burov](https://github.com/lokofanko)
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
