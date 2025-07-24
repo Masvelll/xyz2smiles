@@ -155,8 +155,10 @@ If you cite this project directly, use:
   title        = {xyz2smiles: End-to-end recovery of SMILES strings from 3D atomic coordinates},
   year         = 2025,
   note         = {AIRI Summer School Project},
-  url          = {https://github.com/your_repo_url}
+  url          = {https://github.com/Masvelll/xyz2smiles}
 }
+
+**Project Authors:** [Pavel Maslov](https://github.com/Masvelll) | [Stepan Pavlenko](https://github.com/PavlenkoSS) | [Ivan Burov](https://github.com/lokofanko)
 ```
 
 ## License
